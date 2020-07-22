@@ -1,0 +1,13 @@
+{
+  "name": "20200722-mimi",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc --outDir dist index.ts",
+    "watch": "tsc -w --outDir dist index.ts"
+  },
+  "devDependencies": {
+    "typescript": "^3.9.7"
+  }
+}
