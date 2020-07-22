@@ -10,21 +10,77 @@ const path = (code: () => void) => {
   ctx.stroke();
 };
 
+interface Mimi {
+  radius: number;
+  raddiff: number;
+  radfrom: number;
+  radto: number;
+  start: number;
+  diff: number;
+}
+const mimis: Mimi[] = [
+  {
+    radius: 30,
+    raddiff: 1.2,
+    radfrom: 10,
+    radto: 40,
+    start: 120,
+    diff: 60,
+  },
+  {
+    radius: 70,
+    raddiff: 7,
+    radfrom: 45,
+    radto: 90,
+    start: 80,
+    diff: 50,
+  },
+  {
+    radius: 100,
+    raddiff: 4,
+    radfrom: 75,
+    radto: 100,
+    start: 30,
+    diff: 40,
+  },
+];
+
 const timer = setInterval(() => {
+  console.log(JSON.stringify(mimis));
   ctx.clearRect(0, 0, width, height);
-  for (let radius = 0; radius < 100; radius += 10) {
+  for (let i = 0; i < mimis.length; i += 1) {
+    const { radius, raddiff, radfrom, radto, start, diff } = mimis[i];
     path(() => {
       const start = Math.random() * 360;
-      const diff = Math.random() * 120;
-      ctx.arc(width / 2, height / 2, radius, deg2rad(start), deg2rad(start - 60 - diff));
+      const diff = Math.random() * 60 + 120;
+      ctx.arc(width / 2, height / 2, radius, deg2rad(start), deg2rad(start - diff));
     });
-  }
-}, 200);
 
-document.querySelector('body').insertAdjacentHTML('beforeend', '<div>press ESC to stop</div>');
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') {
-    console.log('stopped');
-    clearInterval(timer);
+    const newRadius = radius + raddiff;
+    let sign = 1;
+    if (newRadius < radfrom || newRadius > radto) {
+      sign = -1;
+    }
+    let newRaddiff = raddiff * sign;
+
+    const newMimi: Mimi = {
+      radius: newRadius,
+      raddiff: newRaddiff,
+      radfrom,
+      radto,
+      start: start + Math.random() * 10,
+      diff: Math.random() * 60 + 60,
+    };
+
+    mimis[i] = newMimi;
   }
+}, 80);
+
+const button = document.querySelector('button');
+button.addEventListener('click', (e) => {
+  console.log('stopped');
+  clearInterval(timer);
+  button.disabled = true;
+  button.innerHTML = '耳を動かすには再読込';
+  document.getElementById('what').style.visibility = 'visible';
 });
